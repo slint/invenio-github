@@ -30,11 +30,13 @@ GITHUB_WEBHOOK_RECEIVER_URL = None
 
 This configuration variable must be set explicitly. Example::
 
-    http://localhost:5000/api/receivers/github/events/?access_token={token}
+  http://localhost:5000/api/receivers/github/events/?access_token={token}
 
-Note: This config variable is used because using `url_for` to get and external
-url of an `invenio_base.api_bluebrint`, while inside the regular app context,
-doesn't work.
+.. note::
+
+  This config variable is used because using `url_for` to get and external
+  url of an `invenio_base.api_bluebrint`, while inside the regular app
+  context, doesn't work.
 """
 
 GITHUB_SHARED_SECRET = 'CHANGEME'
