@@ -60,3 +60,30 @@ GITHUB_METADATA_FILE = '.zenodo.json'
 
 GITHUB_DEPOSIT_CLASS = 'invenio_deposit.api:Deposit'
 """Deposit class that implements a `publish` method."""
+
+GITHUB_PID_FETCHER = 'recid'
+"""PID Fetcher for Release records."""
+
+GITHUB_REMOTE_APP = dict(
+    title='GitHub',
+    description='Software collaboration platform.',
+    icon='fa fa-github',
+    authorized_handler='invenio_oauthclient.handlers'
+                       ':authorized_signup_handler',
+    disconnect_handler='invenio_github.handlers:disconnect',
+    signup_handler=dict(
+        info='invenio_oauthclient.contrib.github:account_info',
+        setup='invenio_github.handlers:account_setup',
+        view='invenio_oauthclient.handlers:signup_handler',
+    ),
+    params=dict(
+        request_token_params={'scope': 'user,admin:repo_hook,read:org'},
+        base_url='https://api.github.com/',
+        request_token_url=None,
+        access_token_url='https://github.com/login/oauth/access_token',
+        access_token_method='POST',
+        authorize_url='https://github.com/login/oauth/authorize',
+        app_key='GITHUB_APP_CREDENTIALS',
+    )
+)
+"""OAuth Client configuration."""
