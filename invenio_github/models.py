@@ -163,14 +163,6 @@ class Repository(db.Model, Timestamp):
     user = db.relationship(User)
 
     @classmethod
-    def get_or_create(cls, user_id, github_id=None, name=None, **kwargs):
-        """Get or create the repository."""
-        obj = cls.get(user_id, github_id=github_id, name=name)
-        if not obj:
-            obj = cls.create(user_id, github_id=github_id, name=name, **kwargs)
-        return obj
-
-    @classmethod
     def create(cls, user_id, github_id=None, name=None, **kwargs):
         """Create the repository."""
         with db.session.begin_nested():
@@ -221,6 +213,7 @@ class Repository(db.Model, Timestamp):
         except NoResultFound:
             repo = cls.create(user_id=user_id, github_id=github_id, name=name)
         repo.hook = hook
+        repo.user_id = user_id
         return repo
 
     @classmethod
@@ -236,6 +229,7 @@ class Repository(db.Model, Timestamp):
         try:
             repo = cls.get(user_id, github_id=github_id, name=name)
             repo.hook = None
+            repo.user_id = None
         except NoResultFound:
             return None
         return repo
@@ -358,13 +352,6 @@ class Release(db.Model, Timestamp):
             return Record(self.recordmetadata.json, model=self.recordmetadata)
         else:
             return None
-
-    @property
-    def doi(self):
-        """Get DOI of Release from record metadata."""
-        if self.record:
-            # TODO: User pidfetcher
-            return self.record.get('doi')
 
     @property
     def deposit_id(self):
